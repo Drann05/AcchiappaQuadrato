@@ -1,6 +1,8 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.gioelepythongui import GioeleFrame
+import random
 from random import randint
+
 
 
 class AcchiappaQuadrato(GioeleFrame):
@@ -8,12 +10,11 @@ class AcchiappaQuadrato(GioeleFrame):
         super().__init__(self, title, width, height, resizable)
 
         # --- Colori e Font ---
-        self.BACKGROUND_COLOR = "#1A1A3C"
-        self.ACCENT_COLOR = "#00FFFF"
-        self.SQUARE_COLOR = "light blue"
-        self.GENERAL_FONT = ("Courier New", 15, "bold")
-        self.TITLE_FONT = ("Arial", 40, "bold")
-        self.BUTTON_FONT = ("Arial", 40, "bold")
+        self.BACKGROUND_COLOR = "#1f3d99"
+        self.ACCENT_COLOR = "#78E3FD"
+        self.GENERAL_FONT = ("Futura", 15, "bold")
+        self.TITLE_FONT = ("Futura", 40, "bold")
+        self.BUTTON_FONT = ("Futura", 40, "bold")
 
         # --- Variabili di Gioco ---
         self.score = 0
@@ -52,7 +53,7 @@ class AcchiappaQuadrato(GioeleFrame):
         ).col_center()
         self.box["relief"] = "flat"
 
-        self.square = Square(self.box, self, background='white', square_color=self.SQUARE_COLOR)
+        self.square = Square(self.box, self, background='white')
         self.square.pack(fill="both", expand=True)
 
         # --- Statistiche e Timer ---
@@ -61,8 +62,8 @@ class AcchiappaQuadrato(GioeleFrame):
         self.label_score["foreground"] = self.ACCENT_COLOR
         self.label_score["background"] = self.BACKGROUND_COLOR
 
-        self.label_percentage = self.addLabel(text=f"Percentage: {self.percentage}%", row=10, column=5, columnspan=2,
-                                             sticky="EW")
+        self.label_percentage = self.addLabel(text=f"Accuracy: {self.percentage}%", row=10, column=5, columnspan=2,
+                                              sticky="EW")
         self.label_percentage["font"] = self.GENERAL_FONT
         self.label_percentage["foreground"] = self.ACCENT_COLOR
         self.label_percentage["background"] = self.BACKGROUND_COLOR
@@ -111,7 +112,7 @@ class AcchiappaQuadrato(GioeleFrame):
         self.clicks_counter = 0
         self.label_score["text"] = f"Score: {self.score}"
         self.label_timer["text"] = f"Time: {self.time_left}"
-        self.label_percentage["text"] = f"Percentage: {self.starting_percentage}%"
+        self.label_percentage["text"] = f"Accuracy: {self.starting_percentage}%"
         self.square.delete_all()
 
     def start_game(self):
@@ -125,6 +126,9 @@ class AcchiappaQuadrato(GioeleFrame):
         self.start_timer()
 
     def end_game(self):
+        final_score = self.score
+        final_percentage = self.percentage
+
         self.game_started = False
         self.reset_game()
 
@@ -132,13 +136,18 @@ class AcchiappaQuadrato(GioeleFrame):
         self.label_start.grid()
         self.square.grid_remove()
 
+        self.messageBox(
+            title="Game Over!",
+            message=f"Il tuo punteggio finale è: {final_score}\nPrecisione: {final_percentage}%"
+        )
+
     def start_timer(self):
         if self.game_started and self.time_left > 0:
             self.time_left -= 1
             self.label_timer["text"] = f"Time: {self.time_left}"
             self.after(1000, self.start_timer)
             if self.time_left == 0:
-                self.game_started = False
+                self.end_game()
 
     def calculate_percentage(self):
         if self.clicks_counter > 0:
@@ -162,16 +171,19 @@ class Square(EasyCanvas):
         self.q = None
         self.max_side = 100
         self._change = False
-        self.timer = None
-        self.timeout = 500
+
+        self._COLOR_OPTIONS = [
+            "red",
+            "green",
+            "blue",
+            "orange",
+            "purple",
+            "yellow",
+            "cyan",
+            "magenta"
+        ]
 
     def start_square(self):
-        self.update()
-
-    def timeout_square(self):
-        self.timer = None
-        self._game.clicks_counter += 1
-        self._game.calculate_percentage()
         self.update()
 
     def update(self):
@@ -185,6 +197,8 @@ class Square(EasyCanvas):
         x1 = x0 + side
         y1 = y0 + side
 
+        random_color = random.choice(self._COLOR_OPTIONS)
+
         if self.q:
             self.delete(self.q)
         self.q = self.drawRectangle(
@@ -192,13 +206,10 @@ class Square(EasyCanvas):
             y0=y0,
             x1=x1,
             y1=y1,
-            fill=self._square_color)
+            fill=random_color)
 
         self.bind("<Button-1>", self.manage_click)  # Click generale, su tutto il canvas
         self.tag_bind(self.q, "<Button-1>", self.clicked_square)  # Click sul quadrato
-
-        if self._game.game_started:
-            self.timer = self.after(1000, self.update)
 
     def manage_click(self, event):
         if self._game.game_started:
@@ -212,9 +223,14 @@ class Square(EasyCanvas):
             self.missed_square()
         '''
 
+    # def missed_square(self):
+
+    def test_function(self):
+        print("Test function")
+        return True
+
     def clicked_square(self, event):
         if self._game.game_started:
-            self.after_cancel(self.timer)
             self.update()
             self._game.update_score()
 
