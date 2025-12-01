@@ -153,9 +153,9 @@ class AcchiappaQuadrato(GioeleFrame):
     def calculate_percentage(self):
         if self.clicks_counter > 0:
             self.percentage = int(self.score * 100 / self.clicks_counter)
-            self.label_percentage["text"] = f"Percentage: {self.percentage}%"
+            self.label_percentage["text"] = f"Accuracy: {self.percentage}%"
         else:
-            self.label_percentage["text"] = "Percentage: 100%"
+            self.label_percentage["text"] = "Accuracy: 100%"
 
     def grid_init(self, row, column):
         for r in range(row):
@@ -186,7 +186,7 @@ class Square(EasyCanvas):
 
     def start_square(self):
         self.update()
-    
+
     def stop_square(self):
         self.after_cancel(self.timer)
 
