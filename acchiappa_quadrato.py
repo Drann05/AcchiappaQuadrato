@@ -1,6 +1,8 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.gioelepythongui import GioeleFrame
+import random
 from random import randint
+
 
 
 class AcchiappaQuadrato(GioeleFrame):
@@ -10,7 +12,6 @@ class AcchiappaQuadrato(GioeleFrame):
         # --- Colori e Font ---
         self.BACKGROUND_COLOR = "#1A1A3C"
         self.ACCENT_COLOR = "#00FFFF"
-        self.SQUARE_COLOR = "light blue"
         self.GENERAL_FONT = ("Courier New", 15, "bold")
         self.TITLE_FONT = ("Arial", 40, "bold")
         self.BUTTON_FONT = ("Arial", 40, "bold")
@@ -52,7 +53,7 @@ class AcchiappaQuadrato(GioeleFrame):
         ).col_center()
         self.box["relief"] = "flat"
 
-        self.square = Square(self.box, self, background='white', square_color=self.SQUARE_COLOR)
+        self.square = Square(self.box, self, background='white')
         self.square.pack(fill="both", expand=True)
 
         # --- Statistiche e Timer ---
@@ -163,6 +164,17 @@ class Square(EasyCanvas):
         self.max_side = 100
         self._change = False
 
+        self._COLOR_OPTIONS = [
+            "red",
+            "green",
+            "blue",
+            "orange",
+            "purple",
+            "yellow",
+            "cyan",
+            "magenta"
+        ]
+
     def start_square(self):
         self.update()
 
@@ -177,6 +189,8 @@ class Square(EasyCanvas):
         x1 = x0 + side
         y1 = y0 + side
 
+        random_color = random.choice(self._COLOR_OPTIONS)
+
         if self.q:
             self.delete(self.q)
         self.q = self.drawRectangle(
@@ -184,7 +198,7 @@ class Square(EasyCanvas):
             y0=y0,
             x1=x1,
             y1=y1,
-            fill=self._square_color)
+            fill=random_color)
 
         self.bind("<Button-1>", self.manage_click)  # Click generale, su tutto il canvas
         self.tag_bind(self.q, "<Button-1>", self.clicked_square)  # Click sul quadrato
