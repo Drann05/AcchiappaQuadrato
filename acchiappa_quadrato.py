@@ -10,11 +10,11 @@ class AcchiappaQuadrato(GioeleFrame):
         super().__init__(self, title, width, height, resizable)
 
         # --- Colori e Font ---
-        self.BACKGROUND_COLOR = "#1A1A3C"
-        self.ACCENT_COLOR = "#00FFFF"
-        self.GENERAL_FONT = ("Courier New", 15, "bold")
-        self.TITLE_FONT = ("Arial", 40, "bold")
-        self.BUTTON_FONT = ("Arial", 40, "bold")
+        self.BACKGROUND_COLOR = "#1f3d99"
+        self.ACCENT_COLOR = "#78E3FD"
+        self.GENERAL_FONT = ("Futura", 15, "bold")
+        self.TITLE_FONT = ("Futura", 40, "bold")
+        self.BUTTON_FONT = ("Futura", 40, "bold")
 
         # --- Variabili di Gioco ---
         self.score = 0
@@ -62,7 +62,7 @@ class AcchiappaQuadrato(GioeleFrame):
         self.label_score["foreground"] = self.ACCENT_COLOR
         self.label_score["background"] = self.BACKGROUND_COLOR
 
-        self.label_percentage = self.addLabel(text=f"Percentage: {self.percentage}%", row=10, column=5, columnspan=2,
+        self.label_percentage = self.addLabel(text=f"Accuracy: {self.percentage}%", row=10, column=5, columnspan=2,
                                               sticky="EW")
         self.label_percentage["font"] = self.GENERAL_FONT
         self.label_percentage["foreground"] = self.ACCENT_COLOR
@@ -112,7 +112,7 @@ class AcchiappaQuadrato(GioeleFrame):
         self.clicks_counter = 0
         self.label_score["text"] = f"Score: {self.score}"
         self.label_timer["text"] = f"Time: {self.time_left}"
-        self.label_percentage["text"] = f"Percentage: {self.starting_percentage}%"
+        self.label_percentage["text"] = f"Accuracy: {self.starting_percentage}%"
         self.square.delete_all()
 
     def start_game(self):
@@ -126,6 +126,9 @@ class AcchiappaQuadrato(GioeleFrame):
         self.start_timer()
 
     def end_game(self):
+        final_score = self.score
+        final_percentage = self.percentage
+
         self.game_started = False
         self.reset_game()
 
@@ -133,13 +136,18 @@ class AcchiappaQuadrato(GioeleFrame):
         self.label_start.grid()
         self.square.grid_remove()
 
+        self.messageBox(
+            title="Game Over!",
+            message=f"Il tuo punteggio finale è: {final_score}\nPrecisione: {final_percentage}%"
+        )
+
     def start_timer(self):
         if self.game_started and self.time_left > 0:
             self.time_left -= 1
             self.label_timer["text"] = f"Time: {self.time_left}"
             self.after(1000, self.start_timer)
             if self.time_left == 0:
-                self.game_started = False
+                self.end_game()
 
     def calculate_percentage(self):
         if self.clicks_counter > 0:
