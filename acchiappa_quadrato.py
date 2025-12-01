@@ -217,6 +217,10 @@ class Square(EasyCanvas):
 
     # def missed_square(self):
 
+    def test_function(self):
+        print("Test function")
+        return True
+
     def clicked_square(self, event):
         if self._game.game_started:
             self.update()
