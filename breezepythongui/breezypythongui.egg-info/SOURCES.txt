@@ -1,0 +1,7 @@
+pyproject.toml
+breezypythongui/__init__.py
+breezypythongui/breezypythongui.py
+breezypythongui.egg-info/PKG-INFO
+breezypythongui.egg-info/SOURCES.txt
+breezypythongui.egg-info/dependency_links.txt
+breezypythongui.egg-info/top_level.txt
