@@ -10,7 +10,7 @@ class AcchiappaQuadrato(GioeleFrame):
         # --- Colori e Font ---
         self.BACKGROUND_COLOR = "#1A1A3C"
         self.ACCENT_COLOR = "#00FFFF"
-        self.SQUARE_COLOR = "pink"
+        self.SQUARE_COLOR = "green"
         self.GENERAL_FONT = ("Courier New", 15, "bold")
         self.TITLE_FONT = ("Arial", 40, "bold")
         self.BUTTON_FONT = ("Arial", 40, "bold")
