@@ -172,6 +172,7 @@ class Square(EasyCanvas):
         self.q = None
         self.max_side = 100
         self._change = False
+        self.square_timer = 1000
 
         self._COLOR_OPTIONS = [
             "red",
@@ -216,8 +217,11 @@ class Square(EasyCanvas):
         self.tag_bind(self.q, "<Button-1>", self.clicked_square)  # Click sul quadrato
 
         if self._game.game_started:
-            self.timer = self.after(1000, self.update)
+            self.timer = self.after(self.square_timer, self.update)
+            self.after(5000, self.decrease_timer)
 
+    def decrease_timer(self):
+        self.square_timer -= 20
 
     def manage_click(self, event):
         if self._game.game_started:
