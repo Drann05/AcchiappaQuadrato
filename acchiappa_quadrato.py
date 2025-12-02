@@ -1,4 +1,3 @@
-#asd
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.gioelepythongui import GioeleFrame
 import random
@@ -252,6 +251,35 @@ class Square(EasyCanvas):
             self.delete(self.q)
 
 
+class MenuBar(tkinter.Tk):
+    def __init__(self):
+        super().__init__()
+        self.setup_menubar()
+        self.config(menu = self.menubar)
+
+    def new_Game(self):
+        messagebox.showinfo("New Game Started!")
+
+    def show_Rank(self):
+        messagebox.showinfo("Classifica")
+        
+    def setup_menubar(self):
+        self.menubar = tkinter.Menu(self)
+        self.config(menu = self.menubar)
+
+        game_menu = tkinter.Menu(self.menubar, tearoff = 0)
+        self.menubar.add_cascade(label="Gioco", menu=game_menu)
+        game_menu.add_command(label="Nuova Partita", command=self.new_Game)
+        game_menu.add_command(label="Esci", command=self.quit)
+        
+        rank_menu = tkinter.Menu(self.menubar, tearoff = 0)
+        self.menubar.add_cascade(label="Classifica", menu=rank_menu)
+        rank_menu.add_command(label="Mostra Classifica", command=self.show_Rank)
+        rank_menu.add_command(label="Salva", command=None)
+            
+
 if __name__ == "__main__":
+
+    app = MenuBar()
     app = AcchiappaQuadrato()
     app.mainloop()
