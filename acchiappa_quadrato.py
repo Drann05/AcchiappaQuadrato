@@ -1,13 +1,18 @@
 from breezypythongui import EasyFrame, EasyCanvas
-from wrappers.gioelepythongui import GioeleFrame
+from wrappers.easierpythongui import EasierFrame
 import random
 from random import randint
+from classifica import Classifica
+from tkinter import Menu
+import tkinter as tk
 
 
-
-class AcchiappaQuadrato(GioeleFrame):
+class AcchiappaQuadrato(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
         super().__init__(self, title, width, height, resizable)
+
+        self.menu()
+
 
         # --- Colori e Font ---
         self.BACKGROUND_COLOR = "#1f3d99"
@@ -24,6 +29,7 @@ class AcchiappaQuadrato(GioeleFrame):
         self.starting_percentage = 100
         self.percentage = self.starting_percentage
         self.game_started = False
+        #self.leaderboard = self.load_leaderboard()
 
         self.grid_init(12, 12)
         self.setSize(1000, 600)
@@ -36,7 +42,7 @@ class AcchiappaQuadrato(GioeleFrame):
             column=0,
             columnspan=12,
             rowspan=2,
-            sticky="NSEW"
+            sticky=""
         ).col_center()
 
         self.titolo["background"] = self.BACKGROUND_COLOR
@@ -87,6 +93,17 @@ class AcchiappaQuadrato(GioeleFrame):
         self.label_start["foreground"] = self.ACCENT_COLOR
         self.label_start["background"] = self.BACKGROUND_COLOR
 
+        self.label_start = self.addButton(
+            text="Classifica",
+            row=12,
+            column=0,
+            columnspan=2,
+            command=self.show_leaderboard
+        ).col_center()
+        self.label_start["font"] = self.GENERAL_FONT
+        self.label_start["foreground"] = self.ACCENT_COLOR
+        self.label_start["background"] = self.BACKGROUND_COLOR
+
         # 2. END (Nascosto all'inizio)
         self.label_end = self.addButton(
             text="End Game",
@@ -100,6 +117,39 @@ class AcchiappaQuadrato(GioeleFrame):
         self.label_end["background"] = self.BACKGROUND_COLOR
 
         self.label_end.grid_remove()
+
+    def menu(self):
+        self.menuBar = self.addMenuBar(row=0, column=0, columnspan=3)
+        self.filemenu = self.menuBar.addMenu(text='Gioco')
+        self.filemenu.addMenuItem(text='Nuova partita', command=self.new)
+        self.filemenu.addMenuItem(text='Esci', command=self.new)
+        self.filemenu = self.menuBar.addMenu(text='Classifica')
+        self.filemenu.addMenuItem(text='Mostra classifica', command=self.new)
+        self.filemenu.addMenuItem(text='Salva', command=self.new)
+
+    def new(self):
+        return
+
+    def load_leaderboard(self):
+        with open("leaderboard.txt", "r") as f:
+            content = f.read()
+        start = content.find("{")
+        end = content.rfind("}") + 1
+
+        dict_text = content[start:end]
+
+        self.leaderboard = eval(dict_text)
+
+    def save_score(self):
+        with open("leaderboard.txt", "a") as f:
+            f.write("classifica: {\n")
+            for nome, punteggio in self.classifica.items():
+                f.write(f"{nome}: {punteggio},\n")
+            f.write("}\n")
+
+
+    def show_leaderboard(self):
+        Classifica(self).activate()
 
     def update_score(self):
         self.score += 1
@@ -247,35 +297,7 @@ class Square(EasyCanvas):
             self.delete(self.q)
 
 
-class MenuBar(tkinter.Tk):
-    def __init__(self):
-        super().__init__()
-        self.setup_menubar()
-        self.config(menu = self.menubar)
-
-    def new_Game(self):
-        messagebox.showinfo("New Game Started!")
-
-    def show_Rank(self):
-        messagebox.showinfo("Classifica")
-        
-    def setup_menubar(self):
-        self.menubar = tkinter.Menu(self)
-        self.config(menu = self.menubar)
-
-        game_menu = tkinter.Menu(self.menubar, tearoff = 0)
-        self.menubar.add_cascade(label="Gioco", menu=game_menu)
-        game_menu.add_command(label="Nuova Partita", command=self.new_Game)
-        game_menu.add_command(label="Esci", command=self.quit)
-        
-        rank_menu = tkinter.Menu(self.menubar, tearoff = 0)
-        self.menubar.add_cascade(label="Classifica", menu=rank_menu)
-        rank_menu.add_command(label="Mostra Classifica", command=self.show_Rank)
-        rank_menu.add_command(label="Salva", command=None)
-            
-
 if __name__ == "__main__":
 
-    app = MenuBar()
     app = AcchiappaQuadrato()
     app.mainloop()

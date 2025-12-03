@@ -1,7 +1,7 @@
 from breezypythongui import EasyFrame
 from .widgetwrapper import WidgetWrapper
 
-class GioeleFrame (EasyFrame):
+class EasierFrame (EasyFrame):
     def __getattribute__(self, name):
         if name.startswith("add"):
             original = super().__getattribute__(name)
