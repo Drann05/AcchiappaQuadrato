@@ -21,6 +21,13 @@ class AcchiappaQuadrato(EasierFrame):
         self.TITLE_FONT = ("Futura", 40, "bold")
         self.BUTTON_FONT = ("Futura", 40, "bold")
 
+        # --- Variabili velocità Quadrato ---
+        self.STARTING_SQUARE_DELAY = 1000
+        self.SQUARE_SPEED_INCREMENT = 20
+        self.SPEED_INCREASE_INTERVAL = 5000
+
+        self.square_delay_ms = self.STARTING_SQUARE_DELAY
+
         # --- Variabili di Gioco ---
         self.score = 0
         self.starting_time = 60
@@ -88,17 +95,6 @@ class AcchiappaQuadrato(EasierFrame):
             column=0,
             columnspan=2,
             command=self.start_game
-        ).col_center()
-        self.label_start["font"] = self.GENERAL_FONT
-        self.label_start["foreground"] = self.ACCENT_COLOR
-        self.label_start["background"] = self.BACKGROUND_COLOR
-
-        self.label_start = self.addButton(
-            text="Classifica",
-            row=12,
-            column=0,
-            columnspan=2,
-            command=self.show_leaderboard
         ).col_center()
         self.label_start["font"] = self.GENERAL_FONT
         self.label_start["foreground"] = self.ACCENT_COLOR
@@ -174,13 +170,21 @@ class AcchiappaQuadrato(EasierFrame):
 
         self.square.start_square()
         self.start_timer()
+        self.start_speed_increase()
 
     def end_game(self):
+
+        self.game_started = False
+
+        if self.speed_timer_id:
+            self.after_cancel(self.speed_timer_id)
+            self.speed_timer_id = None
+
         final_score = self.score
         final_percentage = self.percentage
 
-        self.game_started = False
         self.reset_game()
+        self.after_cancel()
 
         self.label_end.grid_remove()
         self.label_start.grid()
@@ -198,6 +202,20 @@ class AcchiappaQuadrato(EasierFrame):
             self.after(1000, self.start_timer)
             if self.time_left == 0:
                 self.end_game()
+
+    def start_speed_increase(self):
+        if self.game_started:
+            self.speed_timer_id = self.after(self.SPEED_INCREASE_INTERVAL, self.increase_speed_action)
+
+
+    def increase_speed_action(self):
+        if self.game_started:
+            new_delay = self.square_delay_ms - self.SQUARE_SPEED_INCREMENT
+            self.square_delay_ms = new_delay
+            print(new_delay)
+
+            self.speed_timer_id = self.after(self.SPEED_INCREASE_INTERVAL, self.increase_speed_action)
+
 
     def calculate_percentage(self):
         if self.clicks_counter > 0:
@@ -235,9 +253,19 @@ class Square(EasyCanvas):
 
     def start_square(self):
         self.update()
+        self.run_square_loop()
+
+    def run_square_loop(self):
+        if self._game.game_started:
+            self.update()
+            current_delay = self._game.square_delay_ms
+            self.current_delay_id = self.after(current_delay, self.run_square_loop)
 
     def stop_square(self):
-        self.after_cancel(self.timer)
+        if self.current_delay_id:
+            self.after_cancel(self.current_delay_id)
+            self.current_delay_id = None
+        self.delete_all()
 
     def update(self):
 
@@ -264,32 +292,15 @@ class Square(EasyCanvas):
         self.bind("<Button-1>", self.manage_click)  # Click generale, su tutto il canvas
         self.tag_bind(self.q, "<Button-1>", self.clicked_square)  # Click sul quadrato
 
-        if self._game.game_started:
-            self.timer = self.after(1000, self.update)
-
-
     def manage_click(self, event):
         if self._game.game_started:
             self._game.clicks_counter += 1
             self._game.calculate_percentage()
-        # elements_clicked = self.find_overlapping(event.x, event.y, event.x, event.y)
-        '''
-        if self.q in elements_clicked:
-            pass
-        else:
-            self.missed_square()
-        '''
-
-    # def missed_square(self):
-
-    def test_function(self):
-        print("Test function")
-        return True
 
     def clicked_square(self, event):
         if self._game.game_started:
-            self.after_cancel(self.timer)
-            self.update()
+            self.after_cancel(self.current_delay_id)
+            self.run_square_loop()
             self._game.update_score()
 
     def delete_all(self):
