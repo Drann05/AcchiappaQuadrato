@@ -3,16 +3,19 @@ from wrappers.easierpythongui import EasierFrame
 import random
 from random import randint
 from classifica import Classifica
-from tkinter import Menu
-import tkinter as tk
+import os
 
 
 class AcchiappaQuadrato(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
         super().__init__(self, title, width, height, resizable)
 
+        if not os.path.exists("leaderboard.txt"):
+            self.create_leaderboard()
+
         self.menu()
 
+        self.username = "Gioele"
 
         # --- Colori e Font ---
         self.BACKGROUND_COLOR = "#1f3d99"
@@ -30,13 +33,13 @@ class AcchiappaQuadrato(EasierFrame):
 
         # --- Variabili di Gioco ---
         self.score = 0
-        self.starting_time = 60
+        self.starting_time = 5
         self.clicks_counter = 0
         self.time_left = self.starting_time
         self.starting_percentage = 100
         self.percentage = self.starting_percentage
         self.game_started = False
-        #self.leaderboard = self.load_leaderboard()
+        self.leaderboard = {}
 
         self.grid_init(12, 12)
         self.setSize(1000, 600)
@@ -121,7 +124,7 @@ class AcchiappaQuadrato(EasierFrame):
         self.filemenu.addMenuItem(text='Esci', command=self.new)
         self.filemenu = self.menuBar.addMenu(text='Classifica')
         self.filemenu.addMenuItem(text='Mostra classifica', command=self.new)
-        self.filemenu.addMenuItem(text='Salva', command=self.new)
+        self.filemenu.addMenuItem(text='Salva', command=self.save_score)
 
     def new(self):
         return
@@ -135,13 +138,21 @@ class AcchiappaQuadrato(EasierFrame):
         dict_text = content[start:end]
 
         self.leaderboard = eval(dict_text)
+    def create_leaderboard(self):
+        with open("leaderboard.txt", "w") as f:
+            f.write("leaderboard: {\n}")
 
     def save_score(self):
-        with open("leaderboard.txt", "a") as f:
-            f.write("classifica: {\n")
-            for nome, punteggio in self.classifica.items():
-                f.write(f"{nome}: {punteggio},\n")
-            f.write("}\n")
+        self.leaderboard[f"{self.username}"] = self.final_score
+        with open("leaderboard.txt", "r") as f:
+            content = f.readlines()
+        content = content[:-1]
+
+        content.append(f"\t{self.username}: {self.final_score},\n")
+        content.append("}")
+        with open("leaderboard.txt", "w") as f:
+            f.writelines(content)
+
 
 
     def show_leaderboard(self):
@@ -180,11 +191,10 @@ class AcchiappaQuadrato(EasierFrame):
             self.after_cancel(self.speed_timer_id)
             self.speed_timer_id = None
 
-        final_score = self.score
+        self.final_score = self.score
         final_percentage = self.percentage
 
         self.reset_game()
-        self.after_cancel()
 
         self.label_end.grid_remove()
         self.label_start.grid()
@@ -192,8 +202,10 @@ class AcchiappaQuadrato(EasierFrame):
 
         self.messageBox(
             title="Game Over!",
-            message=f"Il tuo punteggio finale è: {final_score}\nPrecisione: {final_percentage}%"
+            message=f"Il tuo punteggio finale è: {self.final_score}\nPrecisione: {final_percentage}%"
         )
+
+        print(self.leaderboard)
 
     def start_timer(self):
         if self.game_started and self.time_left > 0:
