@@ -1,6 +1,8 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.gioelepythongui import GioeleFrame
 import random
+import tkinter
+from tkinter import messagebox
 from random import randint
 
 
@@ -271,15 +273,16 @@ class MenuBar(tkinter.Tk):
         self.menubar.add_cascade(label="Gioco", menu=game_menu)
         game_menu.add_command(label="Nuova Partita", command=self.new_Game)
         game_menu.add_command(label="Esci", command=self.quit)
-        
+
         rank_menu = tkinter.Menu(self.menubar, tearoff = 0)
         self.menubar.add_cascade(label="Classifica", menu=rank_menu)
         rank_menu.add_command(label="Mostra Classifica", command=self.show_Rank)
         rank_menu.add_command(label="Salva", command=None)
-            
+
 
 if __name__ == "__main__":
 
     app = MenuBar()
     app = AcchiappaQuadrato()
     app.mainloop()
+
