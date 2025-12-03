@@ -1,10 +1,10 @@
 from breezypythongui import EasyFrame, EasyCanvas
-from wrappers.gioelepythongui import GioeleFrame
+from wrappers.easierpythongui import EasierFrame
 from acchiappa_quadrato import AcchiappaQuadrato
 import random
 from random import randint
 
-class Menu_principale(GioeleFrame):
+class Menu_principale(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
         super().__init__(self, title, width, height, resizable)
 
@@ -13,6 +13,7 @@ class Menu_principale(GioeleFrame):
         self.GENERAL_FONT = ("Futura", 15, "bold")
         self.TITLE_FONT = ("Futura", 40, "bold")
         self.BUTTON_FONT = ("Futura", 40, "bold")
+
         self.label_start = self.addButton(
             text="Start Game",
             row=11,
@@ -43,7 +44,7 @@ class Menu_principale(GioeleFrame):
             row=16,
             column=0,
             columnspan=2,
-            command=self.cambia_finestra
+            command=self.quit_program
         ).col_center()
         self.label_start["font"] = self.GENERAL_FONT
         self.label_start["foreground"] = self.ACCENT_COLOR
@@ -69,6 +70,9 @@ class Menu_principale(GioeleFrame):
         self.destroy()
         game_window = AcchiappaQuadrato()
         game_window.mainloop()
+
+    def quit_program(self):
+        self.quit()
 
 if __name__ == "__main__":
     app = Menu_principale()

@@ -292,10 +292,27 @@ class Square(EasyCanvas):
         self.bind("<Button-1>", self.manage_click)  # Click generale, su tutto il canvas
         self.tag_bind(self.q, "<Button-1>", self.clicked_square)  # Click sul quadrato
 
+        if self._game.game_started:
+            self.timer = self.after(1000, self.update)
+
+
     def manage_click(self, event):
         if self._game.game_started:
             self._game.clicks_counter += 1
             self._game.calculate_percentage()
+        # elements_clicked = self.find_overlapping(event.x, event.y, event.x, event.y)
+        '''
+        if self.q in elements_clicked:
+            pass
+        else:
+            self.missed_square()
+        '''
+
+    # def missed_square(self):
+
+    def test_function(self):
+        print("Test function")
+        return True
 
     def clicked_square(self, event):
         if self._game.game_started:
