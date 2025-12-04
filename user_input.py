@@ -1,12 +1,16 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.easierpythongui import EasierFrame
 from acchiappa_quadrato import AcchiappaQuadrato
+import os
 
 class User_input(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
         super().__init__(self,title,width,height,resizable)
 
         self.widgets=[]
+        self.username={}
+        if not os.path.exists("username.txt"):
+            self.create_username()
 
         self.BACKGROUND_COLOR = "#1f3d99"
         self.ACCENT_COLOR = "#78E3FD"
@@ -35,7 +39,7 @@ class User_input(EasierFrame):
             text="",
             row=1,
             column=0,
-            width=15,  # Larghezza della casella di testo
+            width=15,
         ).col_center()
         self.nickname_field["font"] = ("Arial", 16)
 
@@ -50,7 +54,7 @@ class User_input(EasierFrame):
         self.label_start["background"] = self.BACKGROUND_COLOR
 
         self.error_label = self.addLabel(
-            text="Messaggio di errore",  # Testo generico iniziale
+            text="Messaggio di errore",
             row=2,
             column=0,
             sticky="NSEW"
@@ -58,10 +62,33 @@ class User_input(EasierFrame):
         self.error_label["foreground"] = "red"
         self.error_label["background"] = self.BACKGROUND_COLOR
         self.error_label["font"] = ("Arial", 14, "italic")
-        # Nasconde l'etichetta all'avvio
+
         self.error_label.grid_remove()
 
+    def load_username(self):
+        with open("username.txt", "r") as f:
+            content = f.read()
 
+        start_index = content.find("{")
+        end_index = content.rfind("}") + 1
+
+        if start_index != -1 and end_index != 0:
+            dict_text = content[start_index:end_index]
+            try:
+                self.username = eval(dict_text)
+            except Exception as e:
+                print(f"Errore nel caricamento di username.txt: {e}")
+                self.username = {}
+        else:
+            self.username = {}
+
+    def create_username(self):
+        with open("username.txt", "w") as f:
+            f.write("usernames: {\n}")
+
+    def save_username(self):
+        with open("username.txt", "w") as f:
+            f.write(f"usernames: {self.username}\n")
 
     def cambia_finestra(self):
         nickname = self.nickname_field.getText().strip()
@@ -76,7 +103,16 @@ class User_input(EasierFrame):
             self.error_label.grid()
             return
 
+
         self.error_label.grid_remove()
+
+
+        self.load_username()
+
+        if nickname not in self.username:
+            self.username[nickname] = 0
+
+        self.save_username()
 
         self.destroy()
         game_window = AcchiappaQuadrato()
