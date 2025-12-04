@@ -33,7 +33,7 @@ class AcchiappaQuadrato(EasierFrame):
 
         # --- Variabili di Gioco ---
         self.score = 0
-        self.starting_time = 5
+        self.starting_time = 60
         self.clicks_counter = 0
         self.time_left = self.starting_time
         self.starting_percentage = 100
@@ -204,8 +204,6 @@ class AcchiappaQuadrato(EasierFrame):
             title="Game Over!",
             message=f"Il tuo punteggio finale è: {self.final_score}\nPrecisione: {final_percentage}%"
         )
-
-        print(self.leaderboard)
 
     def start_timer(self):
         if self.game_started and self.time_left > 0:
