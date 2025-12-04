@@ -1,5 +1,2 @@
-leaderboard: {
-	: 3,
-	: 0,
-	Gioele: 8,
-}
+Gio: 10
+Gioele: 9
