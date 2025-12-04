@@ -1,6 +1,7 @@
 from breezypythongui import EasyFrame, EasyCanvas
 import random
 from random import randint
+from leaderboard import Leaderboard
 import os
 
 
@@ -26,6 +27,7 @@ class AcchiappaQuadrato:
 
         # --- Variabili di Gioco ---
         self.score = 0
+        self.final_score = None
         self.starting_time = 5
         self.clicks_counter = 0
         self.time_left = self.starting_time
@@ -160,13 +162,14 @@ class AcchiappaQuadrato:
             self.label_percentage["text"] = "Accuracy: 100%"
 
     def build_menu(self):
+
         self.menuBar = self.parent.addMenuBar(row=0, column=0, columnspan=3)
         self.filemenu = self.menuBar.addMenu(text='Gioco')
         self.filemenu.addMenuItem(text='Menù Principale', command=self.return_to_menu)
         self.filemenu.addMenuItem(text='Esci', command=self.quit_game)
         self.filemenu = self.menuBar.addMenu(text='Classifica')
         self.filemenu.addMenuItem(text='Mostra classifica', command=self.go_to_leaderboard)
-        self.filemenu.addMenuItem(text='Salva', command=self.save_score)
+        self.filemenu.addMenuItem(text='Salva', command=self.add_score)
 
     def return_to_menu(self):
         self.parent.show_menu()
@@ -177,6 +180,9 @@ class AcchiappaQuadrato:
     def quit_game(self):
         self.parent.quit()
 
+    def add_score(self):
+        name = self.parent.username
+        self.parent.leaderboard.add_score(name,self.final_score)
 
     def load_leaderboard(self):
         with open("leaderboard.txt", "r") as f:
@@ -191,7 +197,7 @@ class AcchiappaQuadrato:
     def create_leaderboard(self):
         with open("leaderboard.txt", "w") as f:
             f.write("leaderboard: {\n}")
-
+    """
     def save_score(self):
         self.leaderboard[f"{self.parent.username}"] = self.final_score
         with open("leaderboard.txt", "r") as f:
@@ -206,7 +212,7 @@ class AcchiappaQuadrato:
         self.parent.messageBox(
             title="Salvataggio",
             message=f"Salvataggio effettuato con successo!")
-
+    """
 
 
 class Square(EasyCanvas):
