@@ -14,3 +14,9 @@ class EasierFrame (EasyFrame):
             return wrapped
 
         return super().__getattribute__(name)
+
+    def grid_init(self, row, column):
+        for r in range(row):
+            self.rowconfigure(r, weight=1)
+        for c in range(column):
+            self.columnconfigure(c, weight=1)

@@ -6,4 +6,6 @@ leaderboard: {
 	Gioele: 3,
 	Gioele: 49,
 	Gioele: 4,
+	Gioele: 9,
+	Gioele: 5,
 }

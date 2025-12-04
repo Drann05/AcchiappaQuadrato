@@ -32,3 +32,4 @@ class WidgetWrapper:
         right_col = max(0, total_cols - colspan)
         self._widget.grid(column=right_col)
         return self._widget
+

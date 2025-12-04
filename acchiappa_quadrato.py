@@ -5,18 +5,11 @@ from random import randint
 import os
 
 
-class AcchiappaQuadrato(EasierFrame):
-    def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
-        super().__init__(self, title, width, height, resizable)
+class AcchiappaQuadrato:
+    def __init__(self, parent):
 
-        if not os.path.exists("leaderboard.txt"):
-            self.create_leaderboard()
-
-        self.menu()
-
-        self.widgets=[]
-
-        self.username = "Gioele"
+        self.parent = parent
+        self.widgets = []
 
         # --- Colori e Font ---
         self.BACKGROUND_COLOR = "#1f3d99"
@@ -34,7 +27,7 @@ class AcchiappaQuadrato(EasierFrame):
 
         # --- Variabili di Gioco ---
         self.score = 0
-        self.starting_time = 60
+        self.starting_time = 5
         self.clicks_counter = 0
         self.time_left = self.starting_time
         self.starting_percentage = 100
@@ -42,133 +35,56 @@ class AcchiappaQuadrato(EasierFrame):
         self.game_started = False
         self.leaderboard = {}
 
-        self.grid_init(12, 12)
-        self.setSize(1000, 600)
-        self.setBackground(self.BACKGROUND_COLOR)
+        # --- Setup griglia e finestra ---
+        (self.parent.grid_init(12, 12))
+        self.parent.setSize(1000, 600)
+        self.parent.setBackground(self.BACKGROUND_COLOR)
 
-        # --- Titolo ---
-        self.titolo = self.addLabel(
-            text="Acchiappa Quadrato",
-            row=0,
-            column=0,
-            columnspan=12,
-            rowspan=2,
-            sticky=""
-        ).col_center()
+        # --- Costruzione interfaccia ---
+        self.build_ui()
+        self.build_menu()
 
-        self.titolo["background"] = self.BACKGROUND_COLOR
-        self.titolo["foreground"] = self.ACCENT_COLOR
-        self.titolo["font"] = ("Arial", 30, "bold")
 
-        # --- Riquadro di Gioco ---
-        self.box = self.addPanel(
-            row=2,
-            column=1,
-            columnspan=8,
-            rowspan=8,
-            background=self.BACKGROUND_COLOR
-        ).col_center()
-        self.box["relief"] = "flat"
+    def style(self, widget):
+        widget["font"] = self.GENERAL_FONT
+        widget["background"] = self.BACKGROUND_COLOR
+        widget["foreground"] = self.ACCENT_COLOR
 
-        self.square = Square(self.box, self, background='white')
+
+    def build_ui(self):
+        titolo = self.parent.addLabel(text="Acchiappa Quadrato", row=0, column=0, columnspan=12, rowspan=2,sticky="").col_center()
+        titolo["background"] = self.BACKGROUND_COLOR
+        titolo["foreground"] = self.ACCENT_COLOR
+        titolo["font"] = ("Arial", 30, "bold")
+        self.widgets.append(titolo)
+
+        self.box = self.parent.addPanel(row=2, column=1, columnspan=8, rowspan=8,background=self.BACKGROUND_COLOR).col_center()
+        self.widgets.append(self.box)
+
+        self.square = Square(self.box, self)
         self.square.pack(fill="both", expand=True)
 
-        # --- Statistiche e Timer ---
-        self.label_score = self.addLabel(text=f"Score: {self.score}", row=10, column=1, columnspan=3, sticky="EW")
-        self.label_score["font"] = self.GENERAL_FONT
-        self.label_score["foreground"] = self.ACCENT_COLOR
-        self.label_score["background"] = self.BACKGROUND_COLOR
+        self.label_score = self.parent.addLabel(text=f"Score: {self.score}", row=10, column=1, columnspan=3, sticky="EW")
+        self.style(self.label_score)
+        self.widgets.append(self.label_score)
 
-        self.label_percentage = self.addLabel(text=f"Accuracy: {self.percentage}%", row=10, column=5, columnspan=2,
-                                              sticky="EW")
-        self.label_percentage["font"] = self.GENERAL_FONT
-        self.label_percentage["foreground"] = self.ACCENT_COLOR
-        self.label_percentage["background"] = self.BACKGROUND_COLOR
+        self.label_percentage = self.parent.addLabel(text=f"Accuracy: {self.percentage}%", row=10, column=5, columnspan=2,sticky="EW")
+        self.style(self.label_percentage)
+        self.widgets.append(self.label_percentage)
 
-        self.label_timer = self.addLabel(text=f"Time: {self.time_left}", row=10, column=8, columnspan=3, sticky="EW")
-        self.label_timer["font"] = self.GENERAL_FONT
-        self.label_timer["foreground"] = self.ACCENT_COLOR
-        self.label_timer["background"] = self.BACKGROUND_COLOR
+        self.label_timer = self.parent.addLabel(text=f"Time: {self.time_left}", row=10, column=8, columnspan=3, sticky="EW")
+        self.style(self.label_timer)
+        self.widgets.append(self.label_timer)
 
-        # Pulsanti Start/End (condividono le stesse coordinate)
+        self.label_start = self.parent.addButton(text="Start Game", row=11, column=0, columnspan=2,command=self.start_game).col_center()
+        self.style(self.label_start)
+        self.widgets.append(self.label_start)
 
-        # 1. START (Visibile all'inizio)
-        self.label_start = self.addButton(
-            text="Start Game",
-            row=11,
-            column=0,
-            columnspan=2,
-            command=self.start_game
-        ).col_center()
-        self.label_start["font"] = self.GENERAL_FONT
-        self.label_start["foreground"] = self.ACCENT_COLOR
-        self.label_start["background"] = self.BACKGROUND_COLOR
-
-        # 2. END (Nascosto all'inizio)
-        self.label_end = self.addButton(
-            text="End Game",
-            row=11,
-            column=0,
-            columnspan=2,
-            command=self.end_game
-        ).col_center()
-        self.label_end["font"] = self.GENERAL_FONT
-        self.label_end["foreground"] = self.ACCENT_COLOR
-        self.label_end["background"] = self.BACKGROUND_COLOR
+        self.label_end = self.parent.addButton(text="End Game", row=11, column=0, columnspan=2,command=self.end_game).col_center()
+        self.style(self.label_end)
+        self.widgets.append(self.label_end)
 
         self.label_end.grid_remove()
-
-    def menu(self):
-        self.menuBar = self.addMenuBar(row=0, column=0, columnspan=3)
-        self.filemenu = self.menuBar.addMenu(text='Gioco')
-        self.filemenu.addMenuItem(text='Menù Principale', command=self.new)
-        self.filemenu.addMenuItem(text='Esci', command=self.quit_game)
-        self.filemenu = self.menuBar.addMenu(text='Classifica')
-        self.filemenu.addMenuItem(text='Mostra classifica', command=self.new)
-        self.filemenu.addMenuItem(text='Salva', command=self.save_score)
-
-    def quit_game(self):
-        self.quit()
-
-
-    def new(self):
-        return
-
-    def load_leaderboard(self):
-        with open("leaderboard.txt", "r") as f:
-            content = f.read()
-        start = content.find("{")
-        end = content.rfind("}") + 1
-
-        dict_text = content[start:end]
-
-        self.leaderboard = eval(dict_text)
-    def create_leaderboard(self):
-        with open("leaderboard.txt", "w") as f:
-            f.write("leaderboard: {\n}")
-
-    def save_score(self):
-        self.leaderboard[f"{self.username}"] = self.final_score
-        with open("leaderboard.txt", "r") as f:
-            content = f.readlines()
-        content = content[:-1]
-
-        content.append(f"\t{self.username}: {self.final_score},\n")
-        content.append("}")
-        with open("leaderboard.txt", "w") as f:
-            f.writelines(content)
-
-        self.messageBox(
-            title="Salvataggio",
-            message=f"Salvataggio effettuato con successo!" )
-
-
-    def show_leaderboard(self):
-        Classifica(self).activate()
-
-    def update_score(self):
-        self.score += 1
-        self.label_score["text"] = f"Score: {self.score}"
 
     def reset_game(self):
         self.score = 0
@@ -196,19 +112,18 @@ class AcchiappaQuadrato(EasierFrame):
         self.game_started = False
 
         if self.speed_timer_id:
-            self.after_cancel(self.speed_timer_id)
+            self.parent.after_cancel(self.speed_timer_id)
             self.speed_timer_id = None
 
         self.final_score = self.score
         final_percentage = self.percentage
-
         self.reset_game()
-
         self.label_end.grid_remove()
         self.label_start.grid()
-        self.square.grid_remove()
+        self.square.delete_all()
+        #self.square.grid_remove()
 
-        self.messageBox(
+        self.parent.messageBox(
             title="Game Over!",
             message=f"Il tuo punteggio finale è: {self.final_score}\nPrecisione: {final_percentage}%"
         )
@@ -217,13 +132,13 @@ class AcchiappaQuadrato(EasierFrame):
         if self.game_started and self.time_left > 0:
             self.time_left -= 1
             self.label_timer["text"] = f"Time: {self.time_left}"
-            self.after(1000, self.start_timer)
+            self.parent.after(1000, self.start_timer)
             if self.time_left == 0:
                 self.end_game()
 
     def start_speed_increase(self):
         if self.game_started:
-            self.speed_timer_id = self.after(self.SPEED_INCREASE_INTERVAL, self.increase_speed_action)
+            self.speed_timer_id = self.parent.after(self.SPEED_INCREASE_INTERVAL, self.increase_speed_action)
 
 
     def increase_speed_action(self):
@@ -232,8 +147,11 @@ class AcchiappaQuadrato(EasierFrame):
             self.square_delay_ms = new_delay
             print(new_delay)
 
-            self.speed_timer_id = self.after(self.SPEED_INCREASE_INTERVAL, self.increase_speed_action)
+            self.speed_timer_id = self.parent.after(self.SPEED_INCREASE_INTERVAL, self.increase_speed_action)
 
+    def update_score(self):
+        self.score += 1
+        self.label_score["text"] = f"Score: {self.score}"
 
     def calculate_percentage(self):
         if self.clicks_counter > 0:
@@ -242,11 +160,50 @@ class AcchiappaQuadrato(EasierFrame):
         else:
             self.label_percentage["text"] = "Accuracy: 100%"
 
-    def grid_init(self, row, column):
-        for r in range(row):
-            self.rowconfigure(r, weight=1)
-        for c in range(column):
-            self.columnconfigure(c, weight=1)
+    def build_menu(self):
+        self.menuBar = self.parent.addMenuBar(row=0, column=0, columnspan=3)
+        self.filemenu = self.menuBar.addMenu(text='Gioco')
+        self.filemenu.addMenuItem(text='Menù Principale', command=self.new)
+        self.filemenu.addMenuItem(text='Esci', command=self.quit_game)
+        self.filemenu = self.menuBar.addMenu(text='Classifica')
+        self.filemenu.addMenuItem(text='Mostra classifica', command=self.new)
+        self.filemenu.addMenuItem(text='Salva', command=self.save_score)
+
+    def quit_game(self):
+        self.quit()
+
+    def new(self):
+        return
+
+    def load_leaderboard(self):
+        with open("leaderboard.txt", "r") as f:
+            content = f.read()
+        start = content.find("{")
+        end = content.rfind("}") + 1
+
+        dict_text = content[start:end]
+
+        self.leaderboard = eval(dict_text)
+
+    def create_leaderboard(self):
+        with open("leaderboard.txt", "w") as f:
+            f.write("leaderboard: {\n}")
+
+    def save_score(self):
+        self.leaderboard[f"{self.parent.username}"] = self.final_score
+        with open("leaderboard.txt", "r") as f:
+            content = f.readlines()
+        content = content[:-1]
+
+        content.append(f"\t{self.parent.username}: {self.final_score},\n")
+        content.append("}")
+        with open("leaderboard.txt", "w") as f:
+            f.writelines(content)
+
+        self.parent.messageBox(
+            title="Salvataggio",
+            message=f"Salvataggio effettuato con successo!")
+
 
 
 class Square(EasyCanvas):

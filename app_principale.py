@@ -7,39 +7,43 @@ from classifica import Schermata_classifica
 
 
 class Main_app(EasierFrame):
-    def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
-        super().__init__(self, title, width, height, resizable)
+    def __init__(self, title="Acchiappa Quadrato", width=1000, height=600, resizable=True):
+        super().__init__(title=title, width=width, height=height, resizable=resizable)
 
-        self._my_widgets=[]
-
+        self._my_widgets = []
         self.show_menu()
+        self.username = "Gioele"
 
     def show_menu(self):
         self.clear()
         self.menu = Menu_principale(self)
-        self._my_widgets.extend(self.menu.widgets)
-
 
     def show_game(self):
         self.clear()
-        self.game= AcchiappaQuadrato(self)
-        self._my_widgets.extend(self.game.widgets)
+        self.game = AcchiappaQuadrato(self)
+
+    def show_user(self):
+        self.clear()
+        self.user = User_input(self)
 
     def show_leaderboard(self):
         self.clear()
         self.leaderboard = Schermata_classifica(self)
-        self._my_widgets.extend(self.leaderboard.widgets)
-
-    def show_user(self):
-        self.clear()
-        self.user= User_input(self)
-        self._my_widgets.extend(self.user.widgets)
 
     def clear(self):
-        for widget in self._my_widgets:
+        for widget in self.winfo_children():
             widget.destroy()
 
-        self._my_widgets=[]
+
+
+
+
+
+    def show_leaderboard(self):
+        Classifica(self).activate()
+
+
+
 
 if __name__ == "__main__":
     app = Main_app()
