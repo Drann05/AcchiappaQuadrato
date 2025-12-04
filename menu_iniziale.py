@@ -1,7 +1,4 @@
 from breezypythongui import EasyFrame, EasyCanvas
-from wrappers.easierpythongui import EasierFrame
-from acchiappa_quadrato import AcchiappaQuadrato
-from user_input import User_input
 
 
 class Menu_principale:
@@ -24,7 +21,7 @@ class Menu_principale:
         widget["background"] = self.BACKGROUND_COLOR
 
     def build_ui(self):
-        title = self.parent.addLabel("MAIN MENU", row=0, column=0, columnspan=12)
+        title = self.parent.addLabel("MAIN MENU", row=0, column=6, columnspan=2)
         title["foreground"] = "White"
         title["background"] = self.BACKGROUND_COLOR
         title["font"] = ("Arial", 30, "bold")
@@ -38,10 +35,6 @@ class Menu_principale:
         self.style(btn_rank)
         self.widgets.append(btn_rank)
 
-        btn_user = self.parent.addButton("Utente", row=8, column=4, columnspan=4, command=self.parent.show_user)
-        self.style(btn_user)
-        self.widgets.append(btn_user)
-
-        btn_quit = self.parent.addButton("Quit", row=10, column=4, columnspan=4, command=self.parent.quit)
+        btn_quit = self.parent.addButton("Quit", row=8, column=4, columnspan=4, command=self.parent.quit)
         self.style(btn_quit)
         self.widgets.append(btn_quit)
