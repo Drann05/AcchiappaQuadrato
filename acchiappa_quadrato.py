@@ -2,7 +2,6 @@ from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.easierpythongui import EasierFrame
 import random
 from random import randint
-from classifica import Classifica
 import os
 
 
@@ -120,11 +119,15 @@ class AcchiappaQuadrato(EasierFrame):
     def menu(self):
         self.menuBar = self.addMenuBar(row=0, column=0, columnspan=3)
         self.filemenu = self.menuBar.addMenu(text='Gioco')
-        self.filemenu.addMenuItem(text='Nuova partita', command=self.new)
-        self.filemenu.addMenuItem(text='Esci', command=self.new)
+        self.filemenu.addMenuItem(text='Menù Principale', command=self.new)
+        self.filemenu.addMenuItem(text='Esci', command=self.quit_game)
         self.filemenu = self.menuBar.addMenu(text='Classifica')
         self.filemenu.addMenuItem(text='Mostra classifica', command=self.new)
         self.filemenu.addMenuItem(text='Salva', command=self.save_score)
+
+    def quit_game(self):
+        self.quit()
+
 
     def new(self):
         return
@@ -152,6 +155,10 @@ class AcchiappaQuadrato(EasierFrame):
         content.append("}")
         with open("leaderboard.txt", "w") as f:
             f.writelines(content)
+
+        self.messageBox(
+            title="Salvataggio",
+            message=f"Salvataggio effettuato con successo!" )
 
 
 

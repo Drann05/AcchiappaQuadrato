@@ -1,8 +1,6 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.easierpythongui import EasierFrame
 from acchiappa_quadrato import AcchiappaQuadrato
-import random
-from random import randint
 
 class Menu_principale(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
@@ -25,6 +23,8 @@ class Menu_principale(EasierFrame):
         self.label_start["foreground"] = self.ACCENT_COLOR
         self.label_start["background"] = self.BACKGROUND_COLOR
 
+        self.grid_init(12, 12)
+        self.setSize(1000, 600)
         self.setBackground(self.BACKGROUND_COLOR)
 
         self.label_start = self.addButton(
@@ -60,8 +60,6 @@ class Menu_principale(EasierFrame):
             sticky="NSEW"
         ).col_center()
 
-
-
         self.titolo["foreground"] = "White"
         self.titolo["background"] = self.BACKGROUND_COLOR
         self.titolo["font"] = ("Arial", 30, "bold")
@@ -73,6 +71,12 @@ class Menu_principale(EasierFrame):
 
     def quit_program(self):
         self.quit()
+
+    def grid_init(self, row, column):
+        for r in range(row):
+            self.rowconfigure(r, weight=1)
+        for c in range(column):
+            self.columnconfigure(c, weight=1)
 
 if __name__ == "__main__":
     app = Menu_principale()

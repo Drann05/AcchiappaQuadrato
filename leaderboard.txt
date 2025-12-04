@@ -3,4 +3,5 @@ leaderboard: {
 	Gioele: 0,
 	Gioele: 0,
 	Gioele: 9,
+	Gioele: 3,
 }
