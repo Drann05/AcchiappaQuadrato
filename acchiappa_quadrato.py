@@ -1,3 +1,5 @@
+from email.contentmanager import get_and_fixup_unknown_message_content
+import tkinter.messagebox as mb
 from breezypythongui import EasyFrame, EasyCanvas
 import random
 from random import randint
@@ -10,6 +12,7 @@ class AcchiappaQuadrato:
 
         self.parent = parent
         self.widgets = []
+        self.is_game_saved=False
 
         # --- Colori e Font ---
         self.BACKGROUND_COLOR = "#1f3d99"
@@ -28,7 +31,7 @@ class AcchiappaQuadrato:
         # --- Variabili di Gioco ---
         self.score = 0
         self.final_score = None
-        self.starting_time = 5
+        self.starting_time = 60
         self.clicks_counter = 0
         self.time_left = self.starting_time
         self.starting_percentage = 100
@@ -172,17 +175,36 @@ class AcchiappaQuadrato:
         self.filemenu.addMenuItem(text='Salva', command=self.add_score)
 
     def return_to_menu(self):
-        self.parent.show_menu()
+        if not self.is_game_saved:
+            response = mb.askyesno(title="Salvataggio", message="Non hai salvato il tuo punteggio, vuoi continuare?")
+            if response:
+                self.parent.show_menu()
+        else:
+            self.parent.show_menu()
 
     def go_to_leaderboard(self):
-        self.parent.show_leaderboard()
+        if not self.is_game_saved:
+            response = mb.askyesno(title="Salvataggio", message="Non hai salvato il tuo punteggio, vuoi continuare?")
+            if response:
+                self.parent.show_leaderboard()
+        else:
+            self.parent.show_leaderboard()
 
     def quit_game(self):
         self.parent.quit()
 
     def add_score(self):
+        if self.final_score == None:
+            self.parent.messageBox(
+                title="Errore",
+                message=f"Devi completare una partita per salvare un punteggio!")
+            raise ValueError
+        self.is_game_saved=True
         name = self.parent.username
         self.parent.leaderboard.add_score(name,self.final_score)
+        self.parent.messageBox(
+            title="Salvataggio",
+            message=f"Salvataggio effettuato con successo!")
 
     def load_leaderboard(self):
         with open("leaderboard.txt", "r") as f:

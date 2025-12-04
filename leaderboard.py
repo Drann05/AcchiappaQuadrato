@@ -44,8 +44,9 @@ class Leaderboard:
 
 
     def add_score(self, name, score):
-        self.scores[name] = score
-        self.save_scores()
+        if name not in self.scores or score > self.scores[name]:
+            self.scores[name] = score
+            self.save_scores()
 
     # Return the top N players
     def get_top(self, n=10):

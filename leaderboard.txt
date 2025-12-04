@@ -1,2 +1,4 @@
 Gio: 10
 Gioele: 9
+johnny: 3
+diego: 2
