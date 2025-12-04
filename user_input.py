@@ -43,14 +43,6 @@ class User_input:
         print(nickname_field.getText())
         self.parent.username = nickname_field.getText()
 
-        self.parent.error_label = self.parent.addLabel(
-            text="Messaggio di errore",
-            row=2,
-            column=0,
-            sticky="NSEW")
-        self.parent.error_label["foreground"] = "red"
-        self.parent.error_label["background"] = self.BACKGROUND_COLOR
-        self.parent.error_label["font"] = ("Arial", 14, "italic")
 
         btn_start = self.parent.addButton("Start Game", row=4, column=4, columnspan=4, command=self.parent.show_game)
         self.style(btn_start)

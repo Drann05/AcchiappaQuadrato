@@ -3,67 +3,46 @@ from wrappers.easierpythongui import EasierFrame
 from acchiappa_quadrato import AcchiappaQuadrato
 from menu_iniziale import Menu_principale
 
-class Schermata_classifica(EasierFrame):
-    def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
-        super().__init__(self, title, width, height, resizable)
-
-        self.widgets=[]
-
-        self.menu()
+class Schermata_classifica:
+    def __init__(self, parent):
+        self.parent = parent
+        self.widgets = []
 
         self.BACKGROUND_COLOR = "#1f3d99"
         self.ACCENT_COLOR = "#78E3FD"
         self.GENERAL_FONT = ("Futura", 15, "bold")
-        self.TITLE_FONT = ("Futura", 40, "bold")
-        self.BUTTON_FONT = ("Futura", 40, "bold")
 
-        self.grid_init(12, 12)
-        self.setSize(1000, 600)
-        self.setBackground(self.BACKGROUND_COLOR)
+        self.parent.setBackground(self.BACKGROUND_COLOR)
+        self.parent.grid_init(12, 12)
 
-        self.titolo = self.addLabel(
-            text="LEADERBOARD",
-            row=0,
-            column=0,
-            columnspan=12,
-            rowspan=2,
-            sticky=""
-        ).col_center()
+        self.build_ui()
+        self.build_menu()
 
-        self.titolo["background"] = self.BACKGROUND_COLOR
-        self.titolo["foreground"] = self.ACCENT_COLOR
-        self.titolo["font"] = ("Arial", 30, "bold")
+    def style(self, widget):
+        widget["font"] = self.GENERAL_FONT
+        widget["foreground"] = self.ACCENT_COLOR
+        widget["background"] = self.BACKGROUND_COLOR
 
-    def menu(self):
-        self.menuBar = self.addMenuBar(row=0, column=0, columnspan=3)
+    def build_ui(self):
+        title = self.parent.addLabel("LEADERBOARD", row=0, column=6, columnspan=2)
+        title["foreground"] = "White"
+        title["background"] = self.BACKGROUND_COLOR
+        title["font"] = ("Arial", 30, "bold")
+        self.widgets.append(title)
+
+    def build_menu(self):
+        self.menuBar = self.parent.addMenuBar(row=0, column=0, columnspan=3)
         self.filemenu = self.menuBar.addMenu(text='Gioco')
-        self.filemenu.addMenuItem(text='Menù Principale', command=self.go_to_menu)
-        self.filemenu.addMenuItem(text="Torna al gioco", command=self.cambia_finestra)
+        self.filemenu.addMenuItem(text='Menù Principale', command=self.return_to_menu)
+        self.filemenu.addMenuItem(text='Torna al gioco', command=self.go_to_game)
         self.filemenu.addMenuItem(text='Esci', command=self.quit_game)
 
 
-    def new(self):
-        return
+    def return_to_menu(self):
+        self.parent.show_menu()
+
+    def go_to_game(self):
+        self.parent.show_game()
 
     def quit_game(self):
-        self.quit()
-
-    def cambia_finestra(self):
-        self.destroy()
-        game_window = AcchiappaQuadrato()
-        game_window.mainloop()
-
-    def go_to_menu(self):
-        self.destroy()
-        game_window = Menu_principale()
-        game_window.mainloop()
-
-    def grid_init(self, row, column):
-        for r in range(row):
-            self.rowconfigure(r, weight=1)
-        for c in range(column):
-            self.columnconfigure(c, weight=1)
-
-if __name__ == "__main__":
-    app = Schermata_classifica()
-    app.mainloop()
+        self.parent.quit()
