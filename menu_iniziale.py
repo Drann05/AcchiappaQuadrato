@@ -27,7 +27,7 @@ class Menu_principale:
         title["font"] = ("Arial", 30, "bold")
         self.widgets.append(title)
 
-        btn_start = self.parent.addButton("Start Game", row=4, column=4, columnspan=4, command=self.parent.show_game)
+        btn_start = self.parent.addButton("Start Game", row=4, column=4, columnspan=4, command=self.parent.show_user)
         self.style(btn_start)
         self.widgets.append(btn_start)
 

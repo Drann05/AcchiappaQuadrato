@@ -1,4 +1,4 @@
-from breezypythongui import EasyCanvas
+from breezypythongui import EasyFrame, EasyCanvas
 import random
 from random import randint
 import os
@@ -177,8 +177,6 @@ class AcchiappaQuadrato:
     def quit_game(self):
         self.parent.quit()
 
-    def new(self):
-        return
 
     def load_leaderboard(self):
         with open("leaderboard.txt", "r") as f:

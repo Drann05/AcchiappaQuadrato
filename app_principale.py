@@ -1,6 +1,6 @@
 from acchiappa_quadrato import AcchiappaQuadrato
 from menu_iniziale import Menu_principale
-from user_input import User_input
+from user_input import UserInput
 from wrappers.easierpythongui import EasierFrame
 from breezypythongui import EasyFrame, EasyCanvas
 from classifica import Schermata_classifica
@@ -12,7 +12,7 @@ class Main_app(EasierFrame):
 
         self._my_widgets = []
         self.show_menu()
-        self.username = "Gioele"
+        self.username = None
 
     def show_menu(self):
         self.clear()
@@ -24,7 +24,7 @@ class Main_app(EasierFrame):
 
     def show_user(self):
         self.clear()
-        self.user = User_input(self)
+        self.user = UserInput(self)
 
     def show_leaderboard(self):
         self.clear()

@@ -1,11 +1,4 @@
 leaderboard: {
-	Gioele: 0,
-	Gioele: 0,
-	Gioele: 0,
-	Gioele: 9,
-	Gioele: 3,
-	Gioele: 49,
-	Gioele: 4,
-	Gioele: 9,
-	Gioele: 5,
+	: 3,
+	: 0,
 }
