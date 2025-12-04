@@ -12,7 +12,7 @@ class Main_app(EasierFrame):
 
         self._my_widgets = []
         self.show_menu()
-        self.username = "Gioele"
+        self.username = None
 
     def show_menu(self):
         self.clear()
@@ -33,14 +33,6 @@ class Main_app(EasierFrame):
     def clear(self):
         for widget in self.winfo_children():
             widget.destroy()
-
-
-
-
-
-
-    def show_leaderboard(self):
-        Classifica(self).activate()
 
 
 

@@ -1,4 +1,4 @@
-from breezypythongui import EasyCanvas
+from breezypythongui import EasyFrame, EasyCanvas
 import random
 from random import randint
 import os
@@ -165,18 +165,18 @@ class AcchiappaQuadrato:
         self.filemenu.addMenuItem(text='Menù Principale', command=self.return_to_menu)
         self.filemenu.addMenuItem(text='Esci', command=self.quit_game)
         self.filemenu = self.menuBar.addMenu(text='Classifica')
-        self.filemenu.addMenuItem(text='Mostra classifica', command=self.new)
+        self.filemenu.addMenuItem(text='Mostra classifica', command=self.go_to_leaderboard)
         self.filemenu.addMenuItem(text='Salva', command=self.save_score)
 
     def return_to_menu(self):
         self.parent.show_menu()
 
+    def go_to_leaderboard(self):
+        self.parent.show_leaderboard()
 
     def quit_game(self):
-        self.quit()
+        self.parent.quit()
 
-    def new(self):
-        return
 
     def load_leaderboard(self):
         with open("leaderboard.txt", "r") as f:
