@@ -38,13 +38,6 @@ class Main_app(EasierFrame):
 
 
 
-
-    def show_leaderboard(self):
-        Classifica(self).activate()
-
-
-
-
 if __name__ == "__main__":
     app = Main_app()
     app.mainloop()
