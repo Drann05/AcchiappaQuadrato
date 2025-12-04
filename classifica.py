@@ -1,6 +1,7 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.easierpythongui import EasierFrame
 from acchiappa_quadrato import AcchiappaQuadrato
+from menu_iniziale import Menu_principale
 
 class Schermata_classifica(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
@@ -34,7 +35,7 @@ class Schermata_classifica(EasierFrame):
     def menu(self):
         self.menuBar = self.addMenuBar(row=0, column=0, columnspan=3)
         self.filemenu = self.menuBar.addMenu(text='Gioco')
-        self.filemenu.addMenuItem(text='Menù Principale', command=self.new)
+        self.filemenu.addMenuItem(text='Menù Principale', command=self.go_to_menu)
         self.filemenu.addMenuItem(text="Torna al gioco", command=self.cambia_finestra)
         self.filemenu.addMenuItem(text='Esci', command=self.quit_game)
 
@@ -48,6 +49,11 @@ class Schermata_classifica(EasierFrame):
     def cambia_finestra(self):
         self.destroy()
         game_window = AcchiappaQuadrato()
+        game_window.mainloop()
+
+    def go_to_menu(self):
+        self.destroy()
+        game_window = Menu_principale()
         game_window.mainloop()
 
     def grid_init(self, row, column):

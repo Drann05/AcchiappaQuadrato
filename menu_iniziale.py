@@ -1,6 +1,8 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.easierpythongui import EasierFrame
 from acchiappa_quadrato import AcchiappaQuadrato
+from user_input import User_input
+
 
 class Menu_principale(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
@@ -66,7 +68,7 @@ class Menu_principale(EasierFrame):
 
     def cambia_finestra(self):
         self.destroy()
-        game_window = AcchiappaQuadrato()
+        game_window = User_input()
         game_window.mainloop()
 
     def quit_program(self):
