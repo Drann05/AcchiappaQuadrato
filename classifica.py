@@ -7,6 +7,8 @@ class Schermata_classifica(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
         super().__init__(self, title, width, height, resizable)
 
+        self.widgets=[]
+
         self.menu()
 
         self.BACKGROUND_COLOR = "#1f3d99"

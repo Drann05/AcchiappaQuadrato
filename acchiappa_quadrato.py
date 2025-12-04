@@ -14,6 +14,8 @@ class AcchiappaQuadrato(EasierFrame):
 
         self.menu()
 
+        self.widgets=[]
+
         self.username = "Gioele"
 
         # --- Colori e Font ---
@@ -159,7 +161,6 @@ class AcchiappaQuadrato(EasierFrame):
         self.messageBox(
             title="Salvataggio",
             message=f"Salvataggio effettuato con successo!" )
-
 
 
     def show_leaderboard(self):

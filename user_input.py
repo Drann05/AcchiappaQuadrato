@@ -6,6 +6,8 @@ class User_input(EasierFrame):
     def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
         super().__init__(self,title,width,height,resizable)
 
+        self.widgets=[]
+
         self.BACKGROUND_COLOR = "#1f3d99"
         self.ACCENT_COLOR = "#78E3FD"
         self.GENERAL_FONT = ("Futura", 15, "bold")

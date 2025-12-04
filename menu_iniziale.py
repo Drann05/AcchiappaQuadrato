@@ -4,9 +4,11 @@ from acchiappa_quadrato import AcchiappaQuadrato
 from user_input import User_input
 
 
-class Menu_principale(EasierFrame):
-    def __init__(self, title="Acchiappa Quadrato", width=None, height=None, resizable=True):
-        super().__init__(self, title, width, height, resizable)
+class Menu_principale:
+    def __init__(self, parent):
+        self.parent = parent
+        self.widgets=[]
+
 
         self.BACKGROUND_COLOR = "#1f3d99"
         self.ACCENT_COLOR = "#78E3FD"
@@ -79,6 +81,8 @@ class Menu_principale(EasierFrame):
             self.rowconfigure(r, weight=1)
         for c in range(column):
             self.columnconfigure(c, weight=1)
+
+    def build_ui(self):
 
 if __name__ == "__main__":
     app = Menu_principale()
