@@ -2,4 +2,7 @@ leaderboard: {
 	: 3,
 	: 0,
 	Gioele: 8,
+	silvia: 1,
+	silvia: 4,
+	gioele: 3,
 }

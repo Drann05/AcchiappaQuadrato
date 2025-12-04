@@ -1,7 +1,6 @@
 from breezypythongui import EasyFrame, EasyCanvas
 from wrappers.easierpythongui import EasierFrame
-from acchiappa_quadrato import AcchiappaQuadrato
-from menu_iniziale import Menu_principale
+
 
 class Schermata_classifica:
     def __init__(self, parent):
@@ -29,6 +28,7 @@ class Schermata_classifica:
         title["background"] = self.BACKGROUND_COLOR
         title["font"] = ("Arial", 30, "bold")
         self.widgets.append(title)
+
 
     def build_menu(self):
         self.menuBar = self.parent.addMenuBar(row=0, column=0, columnspan=3)

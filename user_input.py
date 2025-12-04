@@ -41,9 +41,9 @@ class UserInput:
 
         self.parent.error_label = self.parent.addLabel(
             text="Messaggio di errore",
-            row=2,
-            column=0,
-            sticky="NSEW"
+            row=5,
+            column=4,
+            columnspan=6,
         )
         self.parent.error_label["foreground"] = "red"
         self.parent.error_label["background"] = self.BACKGROUND_COLOR
@@ -53,28 +53,28 @@ class UserInput:
 
     def save_and_start(self):
         self.parent.username = self.nickname_field.getText()
-        print(self.parent.username)
-        self.parent.show_game()
+        is_user_correct=self.check_user_error()
+        if is_user_correct:
+            self.parent.show_game()
 
-    def cambia_finestra(self):
-        nickname = self.parent.nickname_field.getText().strip()
+    def check_user_error(self):
+        nickname = self.nickname_field.getText().strip()
 
         if not nickname:
             self.parent.error_label["text"] = "Devi inserire un nome!"
             self.parent.error_label.grid()
-            return
+            return False
 
         if len(nickname) > 10:
             self.parent.error_label["text"] = "Il nickname non può superare i 10 caratteri!"
             self.parent.error_label.grid()
-            return
-
-
+            return False
         self.parent.error_label.grid_remove()
 
-        self.parent.destroy()
-        game_window = AcchiappaQuadrato()
-        game_window.parent.mainloop()
+        return True
+
+
+
 
 
 
